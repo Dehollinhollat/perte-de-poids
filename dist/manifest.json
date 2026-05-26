@@ -1,0 +1,10 @@
+{
+  "name": "Weight Loss Tracker",
+  "short_name": "WeightTracker",
+  "description": "Suivez votre poids et vos calories facilement",
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#FF6B6B",
+  "background_color": "#FAF9F6",
+  "icons": []
+}
