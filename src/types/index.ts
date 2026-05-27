@@ -139,3 +139,32 @@ export interface FastingSettings {
   windowStart: string;
   windowEnd: string;
 }
+
+export interface Challenge {
+  id: string;
+  type: 'water' | 'sugar' | 'activity' | 'sleep' | 'calories';
+  startDate: string; // YYYY-MM-DD
+  completed: boolean;
+  completedDate?: string;
+}
+
+export interface MealTemplate {
+  id: string;
+  name: string;
+  emoji: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  sugar: number;
+  isFavorite: boolean;
+  createdAt: string;
+}
+
+export interface DayPlan {
+  date: string; // YYYY-MM-DD
+  breakfast: string | null; // MealTemplate id
+  lunch: string | null;
+  dinner: string | null;
+  snacks: string[]; // MealTemplate ids
+}

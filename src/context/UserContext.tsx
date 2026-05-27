@@ -3,6 +3,7 @@ import {
   UserProfile, WeightEntry, Meal, HydrationLog, SleepEntry,
   BodyMeasurement, ActivityEntry, Badge, Reminder,
   BodyCompositionEntry, FastingSession, FastingSettings,
+  Challenge, MealTemplate, DayPlan,
 } from '../types';
 import { save, load, KEYS } from '../utils/storage';
 import { defaultHydrationGoal } from '../utils/calculations';
@@ -64,6 +65,19 @@ interface UserContextType {
   todaysActivityMin: number;
   todaysActivityCal: number;
   last7SleepAvg: number;
+
+  challenges: Challenge[];
+  startChallenge: (type: Challenge['type']) => void;
+  completeChallenge: (id: string) => void;
+  deleteChallenge: (id: string) => void;
+
+  mealTemplates: MealTemplate[];
+  saveMealTemplate: (t: MealTemplate) => void;
+  deleteMealTemplate: (id: string) => void;
+
+  dayPlans: DayPlan[];
+  saveDayPlan: (p: DayPlan) => void;
+  getDayPlan: (date: string) => DayPlan | undefined;
 }
 
 const DEFAULT_FASTING: FastingSettings = {
@@ -99,6 +113,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [badgeUnlockDates, setBadgeUnlockDates] = useState<Record<string, string>>(() => load<Record<string, string>>(KEYS.BADGES) ?? {});
   const [newlyUnlockedBadges, setNewlyUnlockedBadges] = useState<Badge[]>([]);
   const [reminders, setReminders] = useState<Reminder[]>(() => load<Reminder[]>(KEYS.REMINDERS) ?? DEFAULT_REMINDERS);
+  const [challenges, setChallenges] = useState<Challenge[]>(() => load<Challenge[]>(KEYS.CHALLENGES) ?? []);
+  const [mealTemplates, setMealTemplates] = useState<MealTemplate[]>(() => load<MealTemplate[]>(KEYS.MEAL_TEMPLATES) ?? []);
+  const [dayPlans, setDayPlans] = useState<DayPlan[]>(() => load<DayPlan[]>(KEYS.DAY_PLANS) ?? []);
 
   // Apply theme on mount and change
   useEffect(() => {
@@ -139,6 +156,30 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const clearNewBadges = () => setNewlyUnlockedBadges([]);
   const saveReminders = (r: Reminder[]) => { setReminders(r); save(KEYS.REMINDERS, r); };
+
+  const startChallenge = (type: Challenge['type']) => {
+    const existing = challenges.find(c => !c.completed);
+    if (existing) return;
+    const c: Challenge = { id: crypto.randomUUID(), type, startDate: new Date().toISOString().split('T')[0], completed: false };
+    const u = [c, ...challenges]; setChallenges(u); save(KEYS.CHALLENGES, u);
+  };
+  const completeChallenge = (id: string) => {
+    const u = challenges.map(c => c.id === id ? { ...c, completed: true, completedDate: new Date().toISOString().split('T')[0] } : c);
+    setChallenges(u); save(KEYS.CHALLENGES, u);
+  };
+  const deleteChallenge = (id: string) => { const u = challenges.filter(c => c.id !== id); setChallenges(u); save(KEYS.CHALLENGES, u); };
+
+  const saveMealTemplate = (t: MealTemplate) => {
+    const u = mealTemplates.find(m => m.id === t.id) ? mealTemplates.map(m => m.id === t.id ? t : m) : [t, ...mealTemplates];
+    setMealTemplates(u); save(KEYS.MEAL_TEMPLATES, u);
+  };
+  const deleteMealTemplate = (id: string) => { const u = mealTemplates.filter(m => m.id !== id); setMealTemplates(u); save(KEYS.MEAL_TEMPLATES, u); };
+
+  const saveDayPlan = (p: DayPlan) => {
+    const u = dayPlans.find(d => d.date === p.date) ? dayPlans.map(d => d.date === p.date ? p : d) : [p, ...dayPlans];
+    setDayPlans(u); save(KEYS.DAY_PLANS, u);
+  };
+  const getDayPlan = (date: string) => dayPlans.find(d => d.date === date);
 
   const saveProfile = (p: UserProfile) => { setProfile(p); save(KEYS.PROFILE, p); };
   const updateHydrationGoal = (ml: number) => { setHydrationGoalMl(ml); save(KEYS.HYDRATION_GOAL, ml); };
@@ -231,6 +272,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
       addFastingSession, updateFastingSession, deleteFastingSession,
       todaysMeals, todaysCalories, todaysHydration,
       todaysActivityMin, todaysActivityCal, last7SleepAvg,
+      challenges, startChallenge, completeChallenge, deleteChallenge,
+      mealTemplates, saveMealTemplate, deleteMealTemplate,
+      dayPlans, saveDayPlan, getDayPlan,
     }}>
       {children}
     </UserContext.Provider>

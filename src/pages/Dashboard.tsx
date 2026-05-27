@@ -3,8 +3,8 @@ import { useUser } from '../context/UserContext';
 import { calculateBMI, calculateTargetCalories, checkActivityLevel } from '../utils/calculations';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
-
-type Page = 'dashboard' | 'weight' | 'calories' | 'sante' | 'settings';
+import DailySuggestion from '../components/DailySuggestion';
+import { Page } from '../components/BottomNav';
 
 interface DashboardProps {
   onNavigate: (page: Page) => void;
@@ -81,6 +81,9 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             </span>
           </div>
         )}
+
+        {/* Daily activity suggestion */}
+        <DailySuggestion onLogActivity={() => onNavigate('activity')} />
 
         {/* Mini-cards 2×2 grid */}
         <div className="mini-grid">

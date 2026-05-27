@@ -14,6 +14,9 @@ export const KEYS = {
   FASTING_SESSIONS: 'wl_fasting_sessions',
   FASTING_SETTINGS: 'wl_fasting_settings',
   THEME: 'wl_theme',
+  CHALLENGES: 'wl_challenges',
+  MEAL_TEMPLATES: 'wl_meal_templates',
+  DAY_PLANS: 'wl_day_plans',
 };
 
 export function save<T>(key: string, data: T): void {
