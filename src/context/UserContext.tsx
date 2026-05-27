@@ -3,7 +3,7 @@ import {
   UserProfile, WeightEntry, Meal, HydrationLog, SleepEntry,
   BodyMeasurement, ActivityEntry, Badge, Reminder,
   BodyCompositionEntry, FastingSession, FastingSettings,
-  Challenge, MealTemplate, DayPlan,
+  Challenge, MealTemplate, DayPlan, BedtimeSettings,
 } from '../types';
 import { save, load, KEYS } from '../utils/storage';
 import { defaultHydrationGoal } from '../utils/calculations';
@@ -78,7 +78,17 @@ interface UserContextType {
   dayPlans: DayPlan[];
   saveDayPlan: (p: DayPlan) => void;
   getDayPlan: (date: string) => DayPlan | undefined;
+
+  bedtimeSettings: BedtimeSettings;
+  saveBedtimeSettings: (s: BedtimeSettings) => void;
 }
+
+const DEFAULT_BEDTIME: BedtimeSettings = {
+  wakeUpTime: '07:00',
+  targetSleepHours: 8,
+  reminderEnabled: false,
+  reminderMinutesBefore: 30,
+};
 
 const DEFAULT_FASTING: FastingSettings = {
   enabled: false,
@@ -116,6 +126,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [challenges, setChallenges] = useState<Challenge[]>(() => load<Challenge[]>(KEYS.CHALLENGES) ?? []);
   const [mealTemplates, setMealTemplates] = useState<MealTemplate[]>(() => load<MealTemplate[]>(KEYS.MEAL_TEMPLATES) ?? []);
   const [dayPlans, setDayPlans] = useState<DayPlan[]>(() => load<DayPlan[]>(KEYS.DAY_PLANS) ?? []);
+  const [bedtimeSettings, setBedtimeSettings] = useState<BedtimeSettings>(() => load<BedtimeSettings>(KEYS.BEDTIME_SETTINGS) ?? DEFAULT_BEDTIME);
 
   // Apply theme on mount and change
   useEffect(() => {
@@ -180,6 +191,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setDayPlans(u); save(KEYS.DAY_PLANS, u);
   };
   const getDayPlan = (date: string) => dayPlans.find(d => d.date === date);
+
+  const saveBedtimeSettings = (s: BedtimeSettings) => { setBedtimeSettings(s); save(KEYS.BEDTIME_SETTINGS, s); };
 
   const saveProfile = (p: UserProfile) => { setProfile(p); save(KEYS.PROFILE, p); };
   const updateHydrationGoal = (ml: number) => { setHydrationGoalMl(ml); save(KEYS.HYDRATION_GOAL, ml); };
@@ -275,6 +288,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       challenges, startChallenge, completeChallenge, deleteChallenge,
       mealTemplates, saveMealTemplate, deleteMealTemplate,
       dayPlans, saveDayPlan, getDayPlan,
+      bedtimeSettings, saveBedtimeSettings,
     }}>
       {children}
     </UserContext.Provider>

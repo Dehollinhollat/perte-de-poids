@@ -75,12 +75,12 @@ export default function App() {
         {page === 'sante'        && <Sante />}
         {page === 'badges'       && <BadgesSection />}
         {page === 'settings'     && <Settings />}
-        {page === 'predictions'  && <PredictionsSection />}
-        {page === 'weekly_report'&& <WeeklyReport />}
-        {page === 'bedtime'      && <BedtimeCalculator />}
-        {page === 'challenges'   && <ChallengesSection />}
-        {page === 'trends'       && <TrendsSection />}
-        {page === 'meal_planner' && <MealPlanner />}
+        {page === 'predictions'                      && <PredictionsSection />}
+        {(page === 'weekly_report' || page === 'report') && <WeeklyReport />}
+        {page === 'bedtime'                          && <BedtimeCalculator />}
+        {page === 'challenges'                       && <ChallengesSection />}
+        {page === 'trends'                           && <TrendsSection />}
+        {(page === 'meal_planner' || page === 'mealplanner') && <MealPlanner />}
       </main>
 
       <BottomNav page={page} onNavigate={setPage} />

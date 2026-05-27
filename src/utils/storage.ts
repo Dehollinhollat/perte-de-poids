@@ -17,6 +17,7 @@ export const KEYS = {
   CHALLENGES: 'wl_challenges',
   MEAL_TEMPLATES: 'wl_meal_templates',
   DAY_PLANS: 'wl_day_plans',
+  BEDTIME_SETTINGS: 'wl_bedtime_settings',
 };
 
 export function save<T>(key: string, data: T): void {

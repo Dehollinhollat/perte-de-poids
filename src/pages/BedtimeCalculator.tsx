@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Card from '../components/common/Card';
+import { useUser } from '../context/UserContext';
 
 function parseTime(t: string): Date {
   const [h, m] = t.split(':').map(Number);
@@ -26,8 +27,14 @@ const CYCLE_OPTIONS = [
 ];
 
 export default function BedtimeCalculator() {
-  const [wakeTime, setWakeTime] = useState('07:00');
+  const { bedtimeSettings, saveBedtimeSettings } = useUser();
+  const [wakeTime, setWakeTime] = useState(bedtimeSettings.wakeUpTime);
   const [targetCycles, setTargetCycles] = useState(5);
+
+  const handleWakeTimeChange = (t: string) => {
+    setWakeTime(t);
+    saveBedtimeSettings({ ...bedtimeSettings, wakeUpTime: t });
+  };
 
   const recommended = calcBedtime(wakeTime, targetCycles);
 
@@ -43,7 +50,7 @@ export default function BedtimeCalculator() {
         <input
           type="time"
           value={wakeTime}
-          onChange={e => setWakeTime(e.target.value)}
+          onChange={e => handleWakeTimeChange(e.target.value)}
           className="bedtime-time-input"
         />
       </Card>

@@ -1,65 +1,24 @@
 import React, { useState } from 'react';
+import { Home, Scale, Flame, Activity, MoreHorizontal } from 'lucide-react';
 
 export type Page =
   | 'dashboard' | 'weight' | 'calories' | 'activity'
   | 'sante' | 'badges' | 'settings'
-  | 'predictions' | 'weekly_report' | 'bedtime' | 'challenges' | 'trends' | 'meal_planner';
+  | 'predictions' | 'weekly_report' | 'report'
+  | 'bedtime' | 'challenges' | 'trends'
+  | 'meal_planner' | 'mealplanner';
 
 interface Props {
   page: Page;
   onNavigate: (page: Page) => void;
 }
 
-function HomeIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-      <polyline points="9 22 9 12 15 12 15 22"/>
-    </svg>
-  );
-}
-
-function ScaleIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 18V6"/><path d="M18 18V6"/>
-      <path d="M4 7h4"/><path d="M16 7h4"/>
-      <path d="M4 17h4"/><path d="M16 17h4"/>
-      <path d="M8 12h8"/>
-    </svg>
-  );
-}
-
-function FlameIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
-    </svg>
-  );
-}
-
-function ActivityIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-    </svg>
-  );
-}
-
-function MoreIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
-    </svg>
-  );
-}
-
-const MAIN_TABS: { id: Page | 'more'; label: string; Icon: () => React.JSX.Element }[] = [
-  { id: 'dashboard', label: 'Accueil',   Icon: HomeIcon },
-  { id: 'weight',    label: 'Poids',     Icon: ScaleIcon },
-  { id: 'calories',  label: 'Calories',  Icon: FlameIcon },
-  { id: 'activity',  label: 'Activité',  Icon: ActivityIcon },
-  { id: 'more',      label: 'Plus',      Icon: MoreIcon },
+const MAIN_TABS: { id: Page | 'more'; label: string; Icon: React.FC }[] = [
+  { id: 'dashboard', label: 'Accueil',   Icon: () => <Home size={20} strokeWidth={2} /> },
+  { id: 'weight',    label: 'Poids',     Icon: () => <Scale size={20} strokeWidth={2} /> },
+  { id: 'calories',  label: 'Calories',  Icon: () => <Flame size={20} strokeWidth={2} /> },
+  { id: 'activity',  label: 'Activité',  Icon: () => <Activity size={20} strokeWidth={2} /> },
+  { id: 'more',      label: 'Plus',      Icon: () => <MoreHorizontal size={20} strokeWidth={2} /> },
 ];
 
 const MORE_ITEMS: { id: Page; emoji: string; label: string }[] = [

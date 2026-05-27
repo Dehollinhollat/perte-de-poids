@@ -168,3 +168,10 @@ export interface DayPlan {
   dinner: string | null;
   snacks: string[]; // MealTemplate ids
 }
+
+export interface BedtimeSettings {
+  wakeUpTime: string; // HH:MM
+  targetSleepHours: number;
+  reminderEnabled: boolean;
+  reminderMinutesBefore: number;
+}
